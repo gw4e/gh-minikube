@@ -32,24 +32,18 @@ jobs:
         run: minikube addons enable ingress
       - name: Wait for Ingress Controller to Be Ready
         run: |
+          timeout=120
+          start_time=$(date +%s)
           while [[ "$(kubectl get deployments -n ingress-nginx ingress-nginx-controller -o=jsonpath='{.status.availableReplicas}')" != "1" ]]; do
+          current_time=$(date +%s)
+          elapsed_time=$((current_time - start_time))
+          if [ "$elapsed_time" -ge "$timeout" ]; then
+           echo "Ingress Controller did not become ready within the timeout of $timeout seconds."
+           exit 1
+          fi
+          echo "will sleep"
           sleep 5
           done
-      - name: Wait for Ingress Controller Pods
-        run: |
-          until [ "$(kubectl get deployments -n ingress-nginx ingress-nginx-controller -o jsonpath='{.status.conditions[?(@.type=="Available")].status}')" == "True" ]; do
-            status1="$(kubectl get deployments -n ingress-nginx ingress-nginx-controller -o jsonpath='{.status.conditions[?(@.type=="Available")].status}')"
-            echo "Ingress Controller status: $status1"
-            sleep 5
-          done
-      - name: Wait for Ingress Controller Admission Webhook Service
-        run: |
-          echo $(kubectl get svc ingress-nginx-controller-admission -n ingress-nginx -o jsonpath='{.spec.clusterIP}')
-          while [ "$(kubectl get svc ingress-nginx-controller-admission -n ingress-nginx -o jsonpath='{.spec.clusterIP}')" == "<pending>" ]; do
-          echo "still need to wait ..."
-          sleep 5
-          done
-          kubectl get deployments -n ingress-nginx
       - name: Get code
         uses: actions/checkout@v4
       - name : Deploy web server
