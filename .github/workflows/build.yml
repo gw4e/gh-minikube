@@ -19,6 +19,7 @@ jobs:
           docker build -t gh-flask-app:v1 .
   test:
     runs-on: ubuntu-latest
+    needs: build
     steps:
       - name: Start Minikube
         run: minikube start
@@ -26,4 +27,8 @@ jobs:
         run: minikube status
       - name: Get Kubernetes Nodes
         run: kubectl get nodes
+      - name: Enable Ingress
+        run: minikube addons enable ingress
+      - name : Deploy
+        run : kubectl apply -f webserver.yaml
 
