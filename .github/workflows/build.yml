@@ -22,7 +22,8 @@ jobs:
     needs: build
     steps:
       - name: Start Minikube
-        run: minikube start --network socket_vmnet
+        id: minikube
+        uses: medyagh/setup-minikube@master
       - name: Check Minikube Status
         run: minikube status
       - name: Get Kubernetes Nodes
