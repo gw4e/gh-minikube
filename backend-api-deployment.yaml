@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+spec:
+  replicas: 3  # Adjust the number of replicas as needed
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend-container
+          image: app-backend-api:v1  # Use the name of your Docker image
+          ports:
+            - containerPort: 3001  # Adjust the port as needed
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+spec:
+  selector:
+    app: backend  # Match pods with the label "app: backend"
+  ports:
+    - name: http
+      protocol: TCP
+      port: 3001   # Port that the service should listen on
+      targetPort: 3001  # Port that the service should forward traffic to
+  type: ClusterIP  # This creates a ClusterIP service
