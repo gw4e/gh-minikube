@@ -32,8 +32,12 @@ jobs:
         run: minikube addons enable ingress
       - name: Wait for Ingress Controller Pods
         run: kubectl wait --for=condition=available deployment/ingress-nginx-controller -n ingress-nginx --timeout=120s
-      - name: Wait for Ingress Controller Admission Webhook
-        run: kubectl wait --for=condition=available deployment/ingress-nginx-admission-create -n ingress-nginx --timeout=120s
+      - name: Wait for Ingress Controller Admission Webhook Service
+        run: |
+          while [ "$(kubectl get svc ingress-nginx-controller-admission -n ingress-nginx -o jsonpath='{.spec.clusterIP}')" == "<pending>" ]; do
+          echo "still need to wait ..."
+          sleep 5
+          done
       - name: Get code
         uses: actions/checkout@v4
       - name : Deploy web server
