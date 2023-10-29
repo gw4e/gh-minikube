@@ -39,6 +39,7 @@ jobs:
           echo "still need to wait ..."
           sleep 5
           done
+          kubectl get deployments -n ingress-nginx
       - name: Get code
         uses: actions/checkout@v4
       - name : Deploy web server
