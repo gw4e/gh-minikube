@@ -12,7 +12,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       
       # - name: Login to Docker Hub
       #  uses: docker/login-action@v1
@@ -30,11 +30,13 @@ jobs:
       #  with:
       #    push: true
       #    tags: amanmahajan26/flask-app:latest
-  run:
+  - name: Run
     runs-on: ubuntu-latest
-    name: Run
     steps:
-      - echo: |
-        minikube start --vm-driver=hyperkit
-        minikube status
-        kubectl get nodes
+      - name: Start Minikube
+        run: minikube start
+      - name: Check Minikube Status
+        run: minikube status
+      - name: Get Kubernetes Nodes
+        run: kubectl get nodes
+
