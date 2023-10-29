@@ -58,6 +58,8 @@ jobs:
         run : |
           docker images
           kubectl apply -f backend-api-deployment.yaml
+          sleep 10
+          kubectl get pods
       - name: Print Start Backend Service
         run: |
           sleep 5
