@@ -67,6 +67,10 @@ jobs:
           kubectl exec $(kubectl get pods | grep postgresql | awk '{print $1}') -- psql -U postgres -d mydb -f /create-table.sql
       - name : Deploy Backend Service
         run : kubectl apply -f backend-api-deployment.yaml
+      - name: Print Start Backend Service
+        run: |
+          sleep 5
+          kubectl logs -l app=backend
       - name : Deploy web server
         run : kubectl apply -f webserver.yaml
       - name : Plug Ingress
