@@ -31,7 +31,12 @@ jobs:
       - name: Enable Ingress
         run: minikube addons enable ingress
       - name: Wait for Ingress Controller Pods
-        run: kubectl wait --for=condition=available deployment/ingress-nginx-controller -n ingress-nginx --timeout=120s
+        run: |
+          until [ "$(kubectl get deployments -n ingress-nginx ingress-nginx-controller -o jsonpath='{.status.conditions[?(@.type=="Available")].status}')" == "True" ]; do
+          status1="$(kubectl get deployments -n ingress-nginx ingress-nginx-controller -o jsonpath='{.status.conditions[?(@.type=="Available")].status}')"
+          echo "Ingress Controller status: $status1"
+          sleep 5
+          done
       - name: Wait for Ingress Controller Admission Webhook Service
         run: |
           echo $(kubectl get svc ingress-nginx-controller-admission -n ingress-nginx -o jsonpath='{.spec.clusterIP}')
