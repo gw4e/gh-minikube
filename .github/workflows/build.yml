@@ -33,8 +33,10 @@ jobs:
         run  : minikube addons list
       - name: Check Ingress
         run: kubectl get pods -n ingress-nginx
-      - name: Get code
-        uses: actions/checkout@v4
-      - name : Deploy
-        run : kubectl apply -f webserver.yaml
+      - name: deploy
+        run : kubectl create deployment web --image=gcr.io/google-samples/hello-app:1.0
+      #- name: Get code
+      #  uses: actions/checkout@v4
+      #- name : Deploy
+      #  run : kubectl apply -f webserver.yaml
 
