@@ -33,9 +33,9 @@ jobs:
       - name: Wait for Ingress Controller Pods
         run: |
           until [ "$(kubectl get deployments -n ingress-nginx ingress-nginx-controller -o jsonpath='{.status.conditions[?(@.type=="Available")].status}')" == "True" ]; do
-          status1="$(kubectl get deployments -n ingress-nginx ingress-nginx-controller -o jsonpath='{.status.conditions[?(@.type=="Available")].status}')"
-          echo "Ingress Controller status: $status1"
-          sleep 5
+            status1="$(kubectl get deployments -n ingress-nginx ingress-nginx-controller -o jsonpath='{.status.conditions[?(@.type=="Available")].status}')"
+            echo "Ingress Controller status: $status1"
+            sleep 5
           done
       - name: Wait for Ingress Controller Admission Webhook Service
         run: |
