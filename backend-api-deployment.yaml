@@ -16,6 +16,20 @@ spec:
         - name: backend-container
           image: dev.local/app-backend-api:v1  # Use the name of your Docker image
           imagePullPolicy: Never
+          livenessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 3001
+            initialDelaySeconds: 10
+            timeoutSeconds: 5
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 3001
+            initialDelaySeconds: 10
+            timeoutSeconds: 5
+            periodSeconds: 10
           env:
             - name: DATABASE_USER
               valueFrom:

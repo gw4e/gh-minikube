@@ -54,7 +54,7 @@ app.use(bodyParser.json());
 app.use(morgan('combined')); // use 'tiny' or 'combined'
 
 // App Routes - Auth
-app.get('/', (req, res) => res.send('API  Server started'));
+app.get('/healthcheck', (req, res) => res.send('API Server started'));
 app.get('/crud', (req, res) => main.getTableData(req, res, db));
 app.post('/crud', (req, res) => main.postTableData(req, res, db));
 app.put('/crud', (req, res) => main.putTableData(req, res, db));
