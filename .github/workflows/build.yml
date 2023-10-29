@@ -30,3 +30,11 @@ jobs:
       #  with:
       #    push: true
       #    tags: amanmahajan26/flask-app:latest
+  run:
+    runs-on: ubuntu-latest
+    name: Run
+    steps:
+      - echo: |
+        minikube start --vm-driver=hyperkit
+        minikube status
+        kubectl get nodes
