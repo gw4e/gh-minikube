@@ -29,6 +29,8 @@ jobs:
         run: kubectl get nodes
       - name: Enable Ingress
         run: minikube addons enable ingress
+      - name: Get code
+        uses: actions/checkout@v4
       - name : Deploy
         run : kubectl apply -f webserver.yaml
 
