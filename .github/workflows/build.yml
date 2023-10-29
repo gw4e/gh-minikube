@@ -29,8 +29,10 @@ jobs:
         run: kubectl get nodes
       - name: Enable Ingress
         run: minikube addons enable ingress
+      - name: List addons
+        run  : minikube addons list
       - name: Check Ingress
-        run: kubectl get pods -n kube-system
+        run: kubectl get pods -n ingress-nginx
       - name: Get code
         uses: actions/checkout@v4
       - name : Deploy
