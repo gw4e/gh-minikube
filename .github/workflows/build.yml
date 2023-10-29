@@ -34,6 +34,7 @@ jobs:
         run: kubectl wait --for=condition=available deployment/ingress-nginx-controller -n ingress-nginx --timeout=120s
       - name: Wait for Ingress Controller Admission Webhook Service
         run: |
+          echo $(kubectl get svc ingress-nginx-controller-admission -n ingress-nginx -o jsonpath='{.spec.clusterIP}')
           while [ "$(kubectl get svc ingress-nginx-controller-admission -n ingress-nginx -o jsonpath='{.spec.clusterIP}')" == "<pending>" ]; do
           echo "still need to wait ..."
           sleep 5
