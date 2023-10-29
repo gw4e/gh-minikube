@@ -21,6 +21,20 @@ const db = require('knex')({
   }
 });
 
+
+async function printTableRowCount() {
+  try {
+    const rowCount = await db('testtable1').count('id');
+    const count = rowCount[0]['count'];
+
+    console.log(`Number of rows in testtable1: ${count}`);
+  } catch (error) {
+    console.error('Error querying the database:', error);
+  }
+}
+
+printTableRowCount();
+
 // Controllers - aka, the db queries
 const main = require('./controllers/main');
 
