@@ -22,7 +22,7 @@ jobs:
     needs: build
     steps:
       - name: Start Minikube
-        run: minikube start
+        run: minikube start --network socket_vmnet
       - name: Check Minikube Status
         run: minikube status
       - name: Get Kubernetes Nodes
