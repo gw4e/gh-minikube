@@ -14,9 +14,14 @@ jobs:
     steps:
       - name: Get code
         uses: actions/checkout@v4
-      - name: Build
+      #- name: Build
+      #  run: |
+      #    docker build -t gh-flask-app:v1 .
+      - name: Build Backend Docker Image
         run: |
-          docker build -t gh-flask-app:v1 .
+          cd backend-api
+          docker build -t app-backend-api:v1 .
+
   test:
     runs-on: ubuntu-latest
     needs: build
@@ -34,7 +39,7 @@ jobs:
         run: |
           timeout=120
           start_time=$(date +%s)
-          while [[ "$(kubectl get deployments -n ingress-nginx ingress-nginx-controller -o=jsonpath='{.status.availableReplicas}')" == "0" ]]; do
+          while [[ "$(kubectl get deployments -n ingress-nginx ingress-nginx-controller -o=jsonpath='{.status.availableReplicas}')" != "1" ]]; do
           current_time=$(date +%s)
           elapsed_time=$((current_time - start_time))
           if [ "$elapsed_time" -ge "$timeout" ]; then
@@ -46,9 +51,22 @@ jobs:
           done
       - name: Get code
         uses: actions/checkout@v4
+
+      - name: Deploy PostgreSQL to Minikube
+        run: |
+          kubectl apply -f postgres-deployment.yaml
+      - name: Wait for PostgreSQL to be ready
+        run: |
+          until kubectl get pods | grep postgresql | grep "1/1" | grep "Running"; do
+            echo "Waiting for PostgreSQL to start..."
+            sleep 5
+          done
+      - name: Execute SQL Statement
+        run: |
+          kubectl cp create-table.sql $(kubectl get pods | grep postgresql | awk '{print $1}'):/create-table.sql
+          kubectl exec -it $(kubectl get pods | grep postgresql | awk '{print $1}') -- psql -U postgres -d mydb -f /create-table.sql
+
       - name : Deploy web server
         run : kubectl apply -f webserver.yaml
-      #- name : sleep
-      #  run : sleep 120
       - name : Plug Ingress
         run : kubectl apply -f ingress.yaml
