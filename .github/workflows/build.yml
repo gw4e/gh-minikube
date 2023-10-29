@@ -42,7 +42,7 @@ jobs:
           eval $(minikube -p minikube docker-env)
           cd backend-api
           docker build -t dev.local/app-backend-api:v1 .
-          cd frontend
+          cd ../frontend
           docker build -t dev.local/app-frontend:v1 .
           minikube image ls --format table
       - name: Create Kubernetes Secret
