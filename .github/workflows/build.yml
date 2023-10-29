@@ -30,6 +30,11 @@ jobs:
         run: kubectl get nodes
       - name: Enable Ingress
         run: minikube addons enable ingress
+      - name: Wait for Ingress Controller to Be Ready
+        run: |
+          while [[ "$(kubectl get deployments -n ingress-nginx ingress-nginx-controller -o=jsonpath='{.status.availableReplicas}')" != "1" ]]; do
+          sleep 5
+          done
       - name: Wait for Ingress Controller Pods
         run: |
           until [ "$(kubectl get deployments -n ingress-nginx ingress-nginx-controller -o jsonpath='{.status.conditions[?(@.type=="Available")].status}')" == "True" ]; do
