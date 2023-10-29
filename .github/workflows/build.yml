@@ -38,5 +38,7 @@ jobs:
         uses: actions/checkout@v4
       - name : Deploy web server
         run : kubectl apply -f webserver.yaml
+      - name : sleep
+        - run : sleep 120
       - name : Plug Ingress
         run : kubectl apply -f ingress.yaml
