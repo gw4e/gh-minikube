@@ -40,7 +40,6 @@ jobs:
       - name: Build Backend Docker Image
         run: |
           cd backend-api
-          minikube docker-env
           eval $(minikube -p minikube docker-env)
           docker build -t dev.local/app-backend-api:v1 .
           minikube docker-env
@@ -61,7 +60,6 @@ jobs:
           kubectl exec $(kubectl get pods | grep postgresql | awk '{print $1}') -- psql -U postgres -d mydb -f /create-table.sql
       - name : Deploy Backend Service
         run : |
-          docker images
           kubectl apply -f backend-api-deployment.yaml
           sleep 10
           kubectl get pods
