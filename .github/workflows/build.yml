@@ -23,7 +23,7 @@ jobs:
     steps:
       - name: Start Minikube
         id: minikube
-        uses: medyagh/setup-minikube@master
+        run : minikube start --memory 8192 --cpus 4
       - name: Check Minikube Status
         run: minikube status
       - name: Get Kubernetes Nodes
