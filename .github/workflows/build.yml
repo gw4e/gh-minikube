@@ -9,19 +9,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Get code
-        uses: actions/checkout@v4
-      #- name: Build
-      #  run: |
-      #    docker build -t gh-flask-app:v1 .
-      - name: Build Backend Docker Image
-        run: |
-          cd backend-api
-          docker build -t app-backend-api:v1 .
-
   test:
     runs-on: ubuntu-latest
     needs: build
@@ -51,7 +38,10 @@ jobs:
           done
       - name: Get code
         uses: actions/checkout@v4
-
+      - name: Build Backend Docker Image
+        run: |
+          cd backend-api
+          docker build -t app-backend-api:v1 .
       - name: Deploy PostgreSQL to Minikube
         run: |
           kubectl apply -f postgres-deployment.yaml
