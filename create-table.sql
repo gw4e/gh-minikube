@@ -8,3 +8,6 @@ CREATE TABLE testtable1 (
                             hobby VARCHAR(100),
                             added TIMESTAMP NOT NULL
 );
+
+INSERT INTO testtable1 (first, last, email, phone, location, hobby, added)
+VALUES ('John', 'Doe', 'john@example.com', '555-1234', 'New York', 'Programming', NOW());

@@ -11,13 +11,13 @@ const cors = require('cors');  // allows/disallows cross-site communication
 const morgan = require('morgan'); // logs requests
 
 // db Connection w/ localhost
-var db = require('knex')({
+const db = require('knex')({
   client: 'pg',
   connection: {
-    host : '127.0.0.1',
-    user : 'iziwork',
-    password : 'iziworkVIPpass',
-    database : 'crudstarterapi'
+    host: 'postgresql-service', // Use the ClusterIP service name
+    user: 'postgres', // PostgreSQL username
+    password: 'password', // PostgreSQL password
+    database: 'mydb' // PostgreSQL database name
   }
 });
 
