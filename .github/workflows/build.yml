@@ -39,9 +39,11 @@ jobs:
         uses: actions/checkout@v4
       - name: Build Backend Docker Image
         run: |
-          cd backend-api
           eval $(minikube -p minikube docker-env)
+          cd backend-api
           docker build -t dev.local/app-backend-api:v1 .
+          cd frontend
+          docker build -t dev.local/app-frontend:v1 .
           minikube image ls --format table
       - name: Create Kubernetes Secret
         run: |
@@ -78,7 +80,39 @@ jobs:
         run: |
           sleep 5
           kubectl logs -l app=backend
-      - name : Deploy web server
-        run : kubectl apply -f webserver.yaml
       - name : Plug Ingress
-        run : kubectl apply -f ingress.yaml
+        run : |
+          CUSTOM_HOSTNAME="mydomain.com"
+          KUBERNETES_CLUSTER_IP=$(kubectl get nodes -o custom-columns=:status.addresses[0].address --no-headers)
+
+          # Add an entry to the hosts file
+          sudo sh -c "echo '$KUBERNETES_CLUSTER_IP $CUSTOM_HOSTNAME' >> /etc/hosts"
+
+          # Update the Ingress resource with the custom hostname
+          cat <<EOL | kubectl apply -f -
+          apiVersion: networking.k8s.io/v1
+          kind: Ingress
+          metadata:
+            name: frontend-ingress
+          spec:
+            rules:
+              - host: $CUSTOM_HOSTNAME
+                http:
+                  paths:
+                    - path: /
+                      pathType: Prefix
+                      backend:
+                        service:
+                          name: frontend-service
+                          port:
+                            number: 3000
+          EOL
+          kubectl get ingress 
+          for ingress in $(kubectl get ingress -o custom-columns=:metadata.name --no-headers); do
+            echo "Ingress: $ingress"
+            kubectl describe ingress $ingress
+            echo "-----------------------"
+          done
+
+          
+ 
