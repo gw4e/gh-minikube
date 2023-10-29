@@ -74,11 +74,11 @@ jobs:
           kubectl apply -f backend-api-deployment.yaml
           sleep 10
           kubectl get pods
-        env:
-          DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
-          DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
-          DATABASE_PWD: ${{ secrets.DATABASE_PWD }}
-          DATABASE_USER: ${{ secrets.DATABASE_USER }}
+        #env:
+        #  DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
+        #  DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
+        #  DATABASE_PWD: ${{ secrets.DATABASE_PWD }}
+        #  DATABASE_USER: ${{ secrets.DATABASE_USER }}
       - name: Print Start Backend Service
         run: |
           sleep 5
