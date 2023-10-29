@@ -32,6 +32,8 @@ jobs:
         run: minikube addons enable ingress
       - name: Wait for Ingress Controller Pods
         run: kubectl wait --for=condition=available deployment/ingress-nginx-controller -n ingress-nginx --timeout=120s
+      - name: Wait for Ingress Controller Admission Webhook
+        run: kubectl wait --for=condition=available deployment/ingress-nginx-admission-create -n ingress-nginx --timeout=120s
       - name: Get code
         uses: actions/checkout@v4
       - name : Deploy web server
