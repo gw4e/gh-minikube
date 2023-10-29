@@ -16,6 +16,15 @@ spec:
         - name: backend-container
           image: dev.local/app-backend-api:v1  # Use the name of your Docker image
           imagePullPolicy: Never
+          env:
+            - name: DATABASE_HOST
+              value: $DATABASE_HOST
+            - name: DATABASE_USER
+              value:  $DATABASE_USER
+            - name: DATABASE_PWD
+              value: $DATABASE_PWD
+            - name: DATABASE_NAME
+              value: $DATABASE_NAME
           ports:
             - containerPort: 3001  # Adjust the port as needed
 ---

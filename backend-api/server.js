@@ -14,10 +14,10 @@ const morgan = require('morgan'); // logs requests
 const db = require('knex')({
   client: 'pg',
   connection: {
-    host: 'postgresql-service', // Use the ClusterIP service name
-    user: 'postgres', // PostgreSQL username
-    password: 'password', // PostgreSQL password
-    database: 'mydb' // PostgreSQL database name
+    host: process.env.DATABASE_HOST,  //'postgresql-service', // Use the ClusterIP service name
+    user: process.env.DATABASE_USER, // 'postgres', // PostgreSQL username
+    password: process.env.DATABASE_PWD, // 'password', // PostgreSQL password
+    database: process.env.DATABASE_NAME // 'mydb' // PostgreSQL database name
   }
 });
 

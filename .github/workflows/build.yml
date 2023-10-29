@@ -43,6 +43,18 @@ jobs:
           eval $(minikube -p minikube docker-env)
           docker build -t dev.local/app-backend-api:v1 .
           minikube image ls --format table
+      - name: Create Kubernetes Secret
+        run: |
+          kubectl create secret generic my-secret --from-literal=DATABASE_HOST="$GITHUB_SECRET_DATABASE_HOST"
+          kubectl create secret generic my-secret --from-literal=DATABASE_NAME="$GITHUB_SECRET_DATABASE_NAME"
+          kubectl create secret generic my-secret --from-literal=DATABASE_PWD="$GITHUB_SECRET_DATABASE_PWD"
+          kubectl create secret generic my-secret --from-literal=DATABASE_USER="$GITHUB_SECRET_DATABASE_USER"
+        env:
+          GITHUB_SECRET_DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
+          GITHUB_SECRET_DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
+          GITHUB_SECRET_DATABASE_PWD: ${{ secrets.DATABASE_PWD }}
+          GITHUB_SECRET_DATABASE_USER: ${{ secrets.DATABASE_USER }}
+
       - name: Deploy PostgreSQL to Minikube
         run: |
           kubectl apply -f postgres-deployment.yaml
@@ -61,6 +73,11 @@ jobs:
           kubectl apply -f backend-api-deployment.yaml
           sleep 10
           kubectl get pods
+        env:
+          DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
+          DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
+          DATABASE_PWD: ${{ secrets.DATABASE_PWD }}
+          DATABASE_USER: ${{ secrets.DATABASE_USER }}
       - name: Print Start Backend Service
         run: |
           sleep 5
