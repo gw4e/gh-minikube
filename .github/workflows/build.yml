@@ -45,10 +45,11 @@ jobs:
           minikube image ls --format table
       - name: Create Kubernetes Secret
         run: |
-          kubectl create secret generic my-secret --from-literal=DATABASE_HOST="$GITHUB_SECRET_DATABASE_HOST"
-          kubectl create secret generic my-secret --from-literal=DATABASE_NAME="$GITHUB_SECRET_DATABASE_NAME"
-          kubectl create secret generic my-secret --from-literal=DATABASE_PWD="$GITHUB_SECRET_DATABASE_PWD"
-          kubectl create secret generic my-secret --from-literal=DATABASE_USER="$GITHUB_SECRET_DATABASE_USER"
+          kubectl create secret generic my-secret \
+          --from-literal=DATABASE_HOST="$GITHUB_SECRET_DATABASE_HOST" \
+          --from-literal=DATABASE_NAME="$GITHUB_SECRET_DATABASE_NAME" \
+          --from-literal=DATABASE_PWD="$GITHUB_SECRET_DATABASE_PWD" \
+          --from-literal=DATABASE_USER="$GITHUB_SECRET_DATABASE_USER"
         env:
           GITHUB_SECRET_DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
           GITHUB_SECRET_DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
