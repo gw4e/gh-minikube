@@ -80,6 +80,11 @@ jobs:
         run: |
           sleep 5
           kubectl logs -l app=backend
+      - name : Deploy FrontEnd
+        run : |
+          kubectl apply -f frontend-deployment.yaml
+          sleep 10
+          kubectl get pods
       - name : Plug Ingress
         run : |
           CUSTOM_HOSTNAME="mydomain.com"
