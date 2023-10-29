@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: backend-container
-          image: app-backend-api:v1  # Use the name of your Docker image
+          image: dev.local/app-backend-api:v1  # Use the name of your Docker image
           ports:
             - containerPort: 3001  # Adjust the port as needed
 ---

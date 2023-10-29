@@ -40,7 +40,7 @@ jobs:
       - name: Build Backend Docker Image
         run: |
           cd backend-api
-          docker build -t app-backend-api:v1 .
+          docker build -t dev.local/app-backend-api:v1 .
       - name: Deploy PostgreSQL to Minikube
         run: |
           kubectl apply -f postgres-deployment.yaml
