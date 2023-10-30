@@ -115,5 +115,7 @@ jobs:
           curl http://mytestapp.com/crud
       - name : Test
         run : |
+          pwd
+          ls
           mvn clean test -P chrome            
  
