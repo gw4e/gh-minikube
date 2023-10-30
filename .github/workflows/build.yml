@@ -113,5 +113,7 @@ jobs:
       - name : Check FrontEnd
         run : |
           curl http://mytestapp.com/crud
-          
+      - name : Test
+        run : |
+          mvn clean test -P chrome            
  
