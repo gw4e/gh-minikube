@@ -80,20 +80,13 @@ jobs:
       - name : Deploy Backend Service
         run : |
           kubectl apply -f backend-api-deployment.yaml
-          sleep 10
-          kubectl get pods
-      - name: Print Start Backend Service
-        run: |
-          sleep 5
-          kubectl logs -l app=backend
       - name : Deploy FrontEnd
         run : |
           kubectl apply -f frontend-deployment.yaml
-          sleep 10
-          kubectl get pods
-      - name: Print Start FrontEnd Service
+      - name: Print logs
         run: |
           sleep 5
+          kubectl logs -l app=backend
           kubectl logs -l app=frontend
       - name : Plug Ingress
         run : |
@@ -119,10 +112,7 @@ jobs:
           distribution: 'temurin'
           java-version: '18'
       - name : Test
-        run : |
-          pwd
-          ls
-          mvn clean test -P chrome
+        run : mvn clean test -P chrome
       - uses: actions/upload-artifact@v3
         if: failure()
         with:
