@@ -4,9 +4,16 @@ metadata:
   name: frontend-ingress
 spec:
   rules:
-    - host: your-domain.com  # Replace with your actual domain or hostname
+    - host: mytestapp.com  # Replace with your actual domain or hostname
       http:
         paths:
+          - path: /crud
+            pathType: Prefix
+            backend:
+              service:
+                name: backend-service
+                port:
+                  number: 3001  # Replace with the backend service port
           - path: /
             pathType: Prefix
             backend:

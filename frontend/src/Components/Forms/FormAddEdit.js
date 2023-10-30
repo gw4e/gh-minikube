@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
+import {getBackendApiUrl} from  "../../utils"
 
 class AddEditForm extends React.Component {
   state = {
@@ -18,7 +19,7 @@ class AddEditForm extends React.Component {
 
   submitFormAdd = e => {
     e.preventDefault();
-    fetch('http://localhost:3001/crud', {
+    fetch(getBackendApiUrl(), {
       method: 'post',
       headers: {
         'Content-Type': 'application/json'
@@ -50,7 +51,7 @@ class AddEditForm extends React.Component {
 
   submitFormEdit = e => {
     e.preventDefault();
-    fetch('http://localhost:3001/crud', {
+    fetch(getBackendApiUrl(), {
       method: 'put',
       headers: {
         'Content-Type': 'application/json'

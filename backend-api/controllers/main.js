@@ -3,7 +3,10 @@ const getTableData = (req, res, db) => {
     .then(items => {
         console.log("row successfuly read " + items.length)
       if(items.length){
-          res.json(items)
+          console.log("will add items")
+          console.log( items )
+          res.json({items:items})
+          console.log("done")
       } else {
         res.json({dataExists: 'false'})
       }

@@ -3,17 +3,26 @@ import { Container, Row, Col } from 'reactstrap'
 import ModalForm from './Components/Modals/Modal'
 import DataTable from './Components/Tables/DataTable'
 import { CSVLink } from "react-csv"
+import {getBackendApiUrl} from  "./utils"
 
 class App extends Component {
   state = {
     items: []
   };
 
+
+
+
   async getItems(){
-    const response = await fetch('http://localhost:3001/crud');
+    console.log("will fetch")
+    const response = await fetch(getBackendApiUrl());
+    console.log("resp")
     const resp = await response.json();
+    console.log(resp)
     if (resp.items) {
-      this.setState(resp.items);
+      console.log("will set state")
+      this.setState(resp);
+      console.log("i've done the set state")
     }
   }
 
@@ -46,6 +55,9 @@ class App extends Component {
   }
 
   render() {
+    console.log("in datatable")
+    console.log(this.state)
+    // console.log(this.state.items)
     return (
       <Container className="App">
         <Row>

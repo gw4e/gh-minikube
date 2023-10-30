@@ -1,13 +1,14 @@
 import React, { Component } from 'react'
 import { Table, Button } from 'reactstrap';
 import ModalForm from '../Modals/Modal'
+import {getBackendApiUrl} from '../../utils'
 
 class DataTable extends Component {
 
   deleteItem = id => {
     let confirmDelete = window.confirm('Delete item forever?');
     if(confirmDelete){
-      fetch('http://localhost:3001/crud', {
+      fetch( getBackendApiUrl(), {
       method: 'delete',
       headers: {
         'Content-Type': 'application/json'

@@ -14,10 +14,16 @@ spec:
     spec:
       containers:
         - name: frontend-container
-          image: dev.local/app-frontend:v1  # Use the name of your Docker image
+          image: dev.local/app-frontend:v2  # Use the name of your Docker image
           imagePullPolicy: Never
           ports:
             - containerPort: 3000  # Adjust the port as needed
+          env:
+            - name: REACT_APP_BACKEND_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: my-config-map
+                  key: REACT_APP_BACKEND_HOST
 ---
 apiVersion: v1
 kind: Service

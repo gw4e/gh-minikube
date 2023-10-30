@@ -8,9 +8,12 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+description:
+runs:
 jobs:
   test:
     runs-on: ubuntu-latest
+    environment: testing
     steps:
       - name: Start Minikube
         id: minikube
@@ -43,7 +46,7 @@ jobs:
           cd backend-api
           docker build -t dev.local/app-backend-api:v1 .
           cd ../frontend
-          docker build -t dev.local/app-frontend:v1 .
+          docker build -t dev.local/app-frontend:v2 .
           minikube image ls --format table
       - name: Create Kubernetes Secret
         run: |
@@ -57,6 +60,11 @@ jobs:
           GITHUB_SECRET_DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
           GITHUB_SECRET_DATABASE_PWD: ${{ secrets.DATABASE_PWD }}
           GITHUB_SECRET_DATABASE_USER: ${{ secrets.DATABASE_USER }}
+      - name: Create Kubernetes Config
+        run: |
+          kubectl create configmap my-config-map --from-literal=REACT_APP_BACKEND_HOST=$GITHUB_CONFIG_REACT_APP_BACKEND_HOST
+        env:
+          GITHUB_CONFIG_REACT_APP_BACKEND_HOST: ${{ vars.REACT_APP_BACKEND_HOST }}
 
       - name: Deploy PostgreSQL to Minikube
         run: |
@@ -87,31 +95,13 @@ jobs:
           kubectl get pods
       - name : Plug Ingress
         run : |
-          CUSTOM_HOSTNAME="mydomain.com"
+          kubectl apply -f ingress.yaml
+          CUSTOM_HOSTNAME="mytestapp.com"
           KUBERNETES_CLUSTER_IP=$(kubectl get nodes -o custom-columns=:status.addresses[0].address --no-headers)
 
           # Add an entry to the hosts file
           sudo sh -c "echo '$KUBERNETES_CLUSTER_IP $CUSTOM_HOSTNAME' >> /etc/hosts"
 
-          # Update the Ingress resource with the custom hostname
-          cat <<EOL | kubectl apply -f -
-          apiVersion: networking.k8s.io/v1
-          kind: Ingress
-          metadata:
-            name: frontend-ingress
-          spec:
-            rules:
-              - host: $CUSTOM_HOSTNAME
-                http:
-                  paths:
-                    - path: /
-                      pathType: Prefix
-                      backend:
-                        service:
-                          name: frontend-service
-                          port:
-                            number: 3000
-          EOL
           kubectl get ingress 
           for ingress in $(kubectl get ingress -o custom-columns=:metadata.name --no-headers); do
             echo "Ingress: $ingress"
