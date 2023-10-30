@@ -91,6 +91,10 @@ jobs:
           kubectl apply -f frontend-deployment.yaml
           sleep 10
           kubectl get pods
+      - name: Print Start FrontEnd Service
+        run: |
+          sleep 5
+          kubectl logs -l app=frontend
       - name : Plug Ingress
         run : |
           kubectl apply -f ingress.yaml
@@ -106,6 +110,8 @@ jobs:
             kubectl describe ingress $ingress
             echo "-----------------------"
           done
-
+      - name : Check FrontEnd
+          run : |
+            curl http://mytestapp.com/crud
           
  
