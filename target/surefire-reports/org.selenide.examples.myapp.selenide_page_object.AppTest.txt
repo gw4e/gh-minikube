@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: org.selenide.examples.myapp.selenide_page_object.AppTest
--------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.299 s -- in org.selenide.examples.myapp.selenide_page_object.AppTest
