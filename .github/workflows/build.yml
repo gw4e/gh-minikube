@@ -111,7 +111,7 @@ jobs:
             echo "-----------------------"
           done
       - name : Check FrontEnd
-          run : |
-            curl http://mytestapp.com/crud
+        run : |
+          curl http://mytestapp.com/crud
           
  
