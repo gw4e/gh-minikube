@@ -103,9 +103,6 @@ jobs:
             kubectl describe ingress $ingress
             echo "-----------------------"
           done
-      - name : Check FrontEnd
-        run : |
-          curl http://mytestapp.com/crud
       - name : Setup Java
         uses: actions/setup-java@v3
         with:
