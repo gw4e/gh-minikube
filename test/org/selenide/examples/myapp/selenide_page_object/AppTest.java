@@ -18,7 +18,7 @@ public class AppTest {
     mpage.isReady();
     mpage.feed();
 
-    SelenideElement lastNameElt = new HomePage().getLastNameFromThirdRow();
+    SelenideElement lastNameElt = new HomePage().getLastNameFromRow(1);
     lastNameElt.shouldHave(text("last name"));
   }
 }

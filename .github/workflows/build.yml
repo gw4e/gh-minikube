@@ -122,5 +122,11 @@ jobs:
         run : |
           pwd
           ls
-          mvn clean test -P chrome            
+          mvn clean test -P chrome
+      - uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: test-report-gradle
+          path: |
+            **/test/surefire-reports
  

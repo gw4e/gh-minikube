@@ -1,0 +1,4 @@
+org/selenide/examples/myapp/selenide_page_object/ModalPage.class
+org/selenide/examples/myapp/selenide_page_object/TestBasePage.class
+org/selenide/examples/myapp/selenide_page_object/AppTest.class
+org/selenide/examples/myapp/selenide_page_object/HomePage.class

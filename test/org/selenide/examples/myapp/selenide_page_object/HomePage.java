@@ -23,9 +23,9 @@ public class HomePage extends TestBasePage {
         return $$(".table.table-hover tbody tr").get(rowIndex);
     }
 
-    public SelenideElement getLastNameFromThirdRow() {
-        SelenideElement thirdRow = getRowElement(2);
-        return thirdRow.$("td", 1);
+    public SelenideElement getLastNameFromRow(int rowIndex) {
+        SelenideElement row = getRowElement(rowIndex);
+        return row.$("td", 1);
     }
 
 
