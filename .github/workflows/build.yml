@@ -111,6 +111,7 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '18'
+          cache: 'maven'
       - name : Test
         run : mvn clean test -P chrome
       - uses: actions/upload-artifact@v3
