@@ -104,18 +104,25 @@ jobs:
         with:
           custom_hostname: mytestapp.com
           ingress_filename: ingress.yaml
-      - name : Setup Java
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin'
-          java-version: '18'
-          cache: 'maven'
-      - name : Test
-        run : mvn clean test -P chrome
-      - uses: actions/upload-artifact@v3
-        if: failure()
-        with:
-          name: test-report-gradle
-          path: |
-            **/test/surefire-reports
+      - name: Tests
+        uses: ./.github/actions/run-mvn-tests
+
+      #- name : Test
+      #  run : |
+      #      mvn clean test -P chrome
+      #      if [ $? -ne 0 ]; then
+      #        echo "failed" >> test-status.txt
+      #      else
+      #        echo "success" >> test-status.txt
+      #      fi
+      #- name: Set Test Status
+      #  id: test-status
+      #  run: echo ::set-output name=status::$(cat test-status.txt)
+      #- name: Upload Test Reports
+      #  uses: actions/upload-artifact@v2
+      #  if: steps.test-status.outputs.status == 'failed'
+      #  with:
+      #    name: test-report
+      #    path: |
+      #      **/test/surefire-reports
  

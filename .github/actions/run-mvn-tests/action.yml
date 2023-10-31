@@ -1,0 +1,39 @@
+name: 'Run tests'
+
+runs:
+  using: 'composite'
+
+  strategy:
+    matrix:
+      browser: [ 'chrome' ]
+
+  steps:
+    - name: Get code
+      uses: actions/checkout@v4
+    - name : Setup Java
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '18'
+        cache: 'maven'
+    - name: Test
+      shell: bash
+      run: |
+        mvn clean test -P ${{ matrix.browser }}
+        if [ $? -ne 0 ]; then
+          echo "failed" >> test-status.txt
+        else
+          echo "success" >> test-status.txt
+        fi
+    - name: Set Test Status
+      id: test-status
+      shell: bash
+      run: echo ::set-output name=status::$(cat test-status.txt)
+    - name: Upload Test Reports
+      shell: bash
+      uses: actions/upload-artifact@v2
+      if: steps.test-status.outputs.status == 'failed'
+      with:
+        name: test-report
+        path: |
+          **/test/surefire-reports
