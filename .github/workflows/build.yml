@@ -49,19 +49,6 @@ jobs:
           postgress_filename: postgres-deployment.yaml
           db_name: mydb
           sql_filename: create-table.sql
-      #- name: Deploy PostgreSQL to Minikube
-      #  run: |
-      #    kubectl apply -f postgres-deployment.yaml
-      #- name: Wait for PostgreSQL to be ready
-      #  run: |
-      #    until kubectl get pods | grep postgresql | grep "1/1" | grep "Running"; do
-      #      echo "Waiting for PostgreSQL to start..."
-      #      sleep 5
-      #    done
-      #- name: Execute SQL Statement
-      #  run: |
-      #    kubectl cp create-table.sql $(kubectl get pods | grep postgresql | awk '{print $1}'):/create-table.sql
-      #    kubectl exec $(kubectl get pods | grep postgresql | awk '{print $1}') -- psql -U postgres -d mydb -f /create-table.sql
       - name : Deploy Backend Service
         run : |
           kubectl apply -f backend-api-deployment.yaml
