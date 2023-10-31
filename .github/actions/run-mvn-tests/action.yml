@@ -17,14 +17,14 @@ runs:
       run: |
         mvn clean test -P chrome
         if [ $? -ne 0 ]; then
-          echo "failed" >> test-status.txt
+          echo "failed" >> $GITHUB_OUTPUT
         else
-          echo "success" >> test-status.txt
+          echo "success" >> $GITHUB_OUTPUT
         fi
     - name: Set Test Status
       id: test-status
       shell: bash
-      run: echo ::set-output name=status::$(cat test-status.txt)
+      run: echo "{status}={$(cat $GITHUB_OUTPUT)}" >> $GITHUB_OUTPUT
     - name: Upload Test Reports
       if: steps.test-status.outputs.status == 'failed'
       uses: actions/upload-artifact@v2
