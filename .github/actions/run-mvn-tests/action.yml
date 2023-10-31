@@ -30,9 +30,9 @@ runs:
       shell: bash
       run: echo ::set-output name=status::$(cat test-status.txt)
     - name: Upload Test Reports
+      if: steps.test-status.outputs.status == 'failed'
       shell: bash
       uses: actions/upload-artifact@v2
-      if: steps.test-status.outputs.status == 'failed'
       with:
         name: test-report
         path: |
