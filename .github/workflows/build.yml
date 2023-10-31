@@ -100,7 +100,7 @@ jobs:
       #    #  echo "-----------------------"
       #    # done
       - name: Deploy Ingress
-        uses: ./.github/workflows/add-hostname-from-ingress
+        uses: ./.github/actions/deploy-ingress
         with:
           custom_hostname: mytestapp.com
           ingress_filename: ingress.yaml

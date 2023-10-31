@@ -1,0 +1,24 @@
+name: 'Deploy Ingress'
+
+inputs:
+  custom_hostname:
+    description: 'Custom hostname to be added to /etc/hosts'
+    required: true
+  ingress_filename:
+    description: 'The filename to apply to create the ingress resource'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - run: |
+        kubectl apply -f ${{ inputs.ingress_filename }}
+        CUSTOM_HOSTNAME="${{ inputs.custom_hostname }}"
+        KUBERNETES_CLUSTER_IP=$(kubectl get nodes -o custom-columns=:status.addresses[0].address --no-headers)
+        sudo sh -c "echo '$KUBERNETES_CLUSTER_IP $CUSTOM_HOSTNAME' >> /etc/hosts"
+      # Uncomment and modify the following lines if needed
+      # for ingress in $(kubectl get ingress -o custom-columns=:metadata.name --no-headers); do
+      #   echo "Ingress: $ingress"
+      #   kubectl describe ingress $ingress
+      #   echo "-----------------------"
+      # done
