@@ -88,21 +88,22 @@ jobs:
           sleep 5
           kubectl logs -l app=backend
           kubectl logs -l app=frontend
-      - name : Plug Ingress
-        run : |
-          kubectl apply -f ingress.yaml
-          CUSTOM_HOSTNAME="mytestapp.com"
-          KUBERNETES_CLUSTER_IP=$(kubectl get nodes -o custom-columns=:status.addresses[0].address --no-headers)
-
-          # Add an entry to the hosts file
-          sudo sh -c "echo '$KUBERNETES_CLUSTER_IP $CUSTOM_HOSTNAME' >> /etc/hosts"
-
-          kubectl get ingress 
-          for ingress in $(kubectl get ingress -o custom-columns=:metadata.name --no-headers); do
-            echo "Ingress: $ingress"
-            kubectl describe ingress $ingress
-            echo "-----------------------"
-          done
+      #- name : Plug Ingress
+      #  run : |
+      #    kubectl apply -f ingress.yaml
+      #    CUSTOM_HOSTNAME="mytestapp.com"
+      #    KUBERNETES_CLUSTER_IP=$(kubectl get nodes -o custom-columns=:status.addresses[0].address --no-headers)
+      #    sudo sh -c "echo '$KUBERNETES_CLUSTER_IP $CUSTOM_HOSTNAME' >> /etc/hosts"
+      #    # for ingress in $(kubectl get ingress -o custom-columns=:metadata.name --no-headers); do
+      #    #  echo "Ingress: $ingress"
+      #    #  kubectl describe ingress $ingress
+      #    #  echo "-----------------------"
+      #    # done
+      - name: Deploy Ingress
+        uses: ./.github/actions/add-hostname-from-ingress
+        with:
+          custom_hostname: mytestapp.com
+          ingress_filename: ingress.yaml
       - name : Setup Java
         uses: actions/setup-java@v3
         with:
