@@ -3,10 +3,6 @@ name: 'Run tests'
 runs:
   using: 'composite'
 
-  strategy:
-    matrix:
-      browser: [ 'chrome' ]
-
   steps:
     - name: Get code
       uses: actions/checkout@v4
@@ -19,7 +15,7 @@ runs:
     - name: Test
       shell: bash
       run: |
-        mvn clean test -P ${{ matrix.browser }}
+        mvn clean test -P chrome
         if [ $? -ne 0 ]; then
           echo "failed" >> test-status.txt
         else
