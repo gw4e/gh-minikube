@@ -20,22 +20,22 @@ jobs:
         run: minikube status
       - name: Get Kubernetes Nodes
         run: kubectl get nodes
-      - name: Enable Ingress
-        run: minikube addons enable ingress
-      - name: Wait for Ingress Controller to Be Ready
-        run: |
-          timeout=120
-          start_time=$(date +%s)
-          while [[ "$(kubectl get deployments -n ingress-nginx ingress-nginx-controller -o=jsonpath='{.status.availableReplicas}')" != "1" ]]; do
-          current_time=$(date +%s)
-          elapsed_time=$((current_time - start_time))
-          if [ "$elapsed_time" -ge "$timeout" ]; then
-           echo "Ingress Controller did not become ready within the timeout of $timeout seconds."
-           exit 1
-          fi
-          echo "will sleep"
-          sleep 5
-          done
+      #- name: Enable Ingress
+      #  run: minikube addons enable ingress
+      #- name: Wait for Ingress Controller to Be Ready
+      #  run: |
+      #    timeout=120
+      #    start_time=$(date +%s)
+      #    while [[ "$(kubectl get deployments -n ingress-nginx ingress-nginx-controller -o=jsonpath='{.status.availableReplicas}')" != "1" ]]; do
+      #    current_time=$(date +%s)
+      #    elapsed_time=$((current_time - start_time))
+      #    if [ "$elapsed_time" -ge "$timeout" ]; then
+      #     echo "Ingress Controller did not become ready within the timeout of $timeout seconds."
+      #     exit 1
+      #    fi
+      #    echo "will sleep"
+      #    sleep 5
+      #    done
       - name: Get code
         uses: actions/checkout@v4
       - name: Build Backend Docker Image
@@ -88,17 +88,6 @@ jobs:
           sleep 5
           kubectl logs -l app=backend
           kubectl logs -l app=frontend
-      #- name : Plug Ingress
-      #  run : |
-      #    kubectl apply -f ingress.yaml
-      #    CUSTOM_HOSTNAME="mytestapp.com"
-      #    KUBERNETES_CLUSTER_IP=$(kubectl get nodes -o custom-columns=:status.addresses[0].address --no-headers)
-      #    sudo sh -c "echo '$KUBERNETES_CLUSTER_IP $CUSTOM_HOSTNAME' >> /etc/hosts"
-      #    # for ingress in $(kubectl get ingress -o custom-columns=:metadata.name --no-headers); do
-      #    #  echo "Ingress: $ingress"
-      #    #  kubectl describe ingress $ingress
-      #    #  echo "-----------------------"
-      #    # done
       - name: Deploy Ingress
         uses: ./.github/actions/deploy-ingress
         with:
@@ -107,22 +96,5 @@ jobs:
       - name: Tests
         uses: ./.github/actions/run-mvn-tests
 
-      #- name : Test
-      #  run : |
-      #      mvn clean test -P chrome
-      #      if [ $? -ne 0 ]; then
-      #        echo "failed" >> test-status.txt
-      #      else
-      #        echo "success" >> test-status.txt
-      #      fi
-      #- name: Set Test Status
-      #  id: test-status
-      #  run: echo ::set-output name=status::$(cat test-status.txt)
-      #- name: Upload Test Reports
-      #  uses: actions/upload-artifact@v2
-      #  if: steps.test-status.outputs.status == 'failed'
-      #  with:
-      #    name: test-report
-      #    path: |
-      #      **/test/surefire-reports
+
  
