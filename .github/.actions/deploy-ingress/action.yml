@@ -11,7 +11,10 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - run: |
+    - name: Get code
+      uses: actions/checkout@v4
+    - name: Build Backend Docker Image
+      run: |
         kubectl apply -f ${{ inputs.ingress_filename }}
         CUSTOM_HOSTNAME="${{ inputs.custom_hostname }}"
         KUBERNETES_CLUSTER_IP=$(kubectl get nodes -o custom-columns=:status.addresses[0].address --no-headers)
