@@ -14,6 +14,7 @@ runs:
     - name: Get code
       uses: actions/checkout@v4
     - name: Enable Ingress
+      shell: bash
       run: minikube addons enable ingress
     - name: Wait for Ingress Controller to Be Ready
       shell: bash
