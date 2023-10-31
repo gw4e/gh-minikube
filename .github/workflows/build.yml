@@ -16,26 +16,6 @@ jobs:
       - name: Start Minikube
         id: minikube
         run : minikube start
-      - name: Check Minikube Status
-        run: minikube status
-      - name: Get Kubernetes Nodes
-        run: kubectl get nodes
-      #- name: Enable Ingress
-      #  run: minikube addons enable ingress
-      #- name: Wait for Ingress Controller to Be Ready
-      #  run: |
-      #    timeout=120
-      #    start_time=$(date +%s)
-      #    while [[ "$(kubectl get deployments -n ingress-nginx ingress-nginx-controller -o=jsonpath='{.status.availableReplicas}')" != "1" ]]; do
-      #    current_time=$(date +%s)
-      #    elapsed_time=$((current_time - start_time))
-      #    if [ "$elapsed_time" -ge "$timeout" ]; then
-      #     echo "Ingress Controller did not become ready within the timeout of $timeout seconds."
-      #     exit 1
-      #    fi
-      #    echo "will sleep"
-      #    sleep 5
-      #    done
       - name: Get code
         uses: actions/checkout@v4
       - name: Build Backend Docker Image
@@ -63,20 +43,25 @@ jobs:
           kubectl create configmap my-config-map --from-literal=REACT_APP_BACKEND_HOST=$GITHUB_CONFIG_REACT_APP_BACKEND_HOST
         env:
           GITHUB_CONFIG_REACT_APP_BACKEND_HOST: ${{ vars.REACT_APP_BACKEND_HOST }}
-
-      - name: Deploy PostgreSQL to Minikube
-        run: |
-          kubectl apply -f postgres-deployment.yaml
-      - name: Wait for PostgreSQL to be ready
-        run: |
-          until kubectl get pods | grep postgresql | grep "1/1" | grep "Running"; do
-            echo "Waiting for PostgreSQL to start..."
-            sleep 5
-          done
-      - name: Execute SQL Statement
-        run: |
-          kubectl cp create-table.sql $(kubectl get pods | grep postgresql | awk '{print $1}'):/create-table.sql
-          kubectl exec $(kubectl get pods | grep postgresql | awk '{print $1}') -- psql -U postgres -d mydb -f /create-table.sql
+      - name: Deploy PostgreSQL
+        uses: ./.github/actions/setup-db
+        with:
+          postgress_filename: postgres-deployment.yaml
+          db_name: mydb
+          sql_filename: create-table.sql
+      #- name: Deploy PostgreSQL to Minikube
+      #  run: |
+      #    kubectl apply -f postgres-deployment.yaml
+      #- name: Wait for PostgreSQL to be ready
+      #  run: |
+      #    until kubectl get pods | grep postgresql | grep "1/1" | grep "Running"; do
+      #      echo "Waiting for PostgreSQL to start..."
+      #      sleep 5
+      #    done
+      #- name: Execute SQL Statement
+      #  run: |
+      #    kubectl cp create-table.sql $(kubectl get pods | grep postgresql | awk '{print $1}'):/create-table.sql
+      #    kubectl exec $(kubectl get pods | grep postgresql | awk '{print $1}') -- psql -U postgres -d mydb -f /create-table.sql
       - name : Deploy Backend Service
         run : |
           kubectl apply -f backend-api-deployment.yaml

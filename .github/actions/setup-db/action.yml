@@ -1,0 +1,33 @@
+name: 'Setup DB'
+
+inputs:
+  postgress_filename:
+    description: 'The filename to apply to create the postgres resource'
+    required: true
+  db_name:
+    description: 'Thedb into which sql filename to execute'
+    required: true
+  sql_filename:
+    description: 'The sql filename to execute'
+    required: true
+
+runs:
+  using: 'composite'
+
+  steps:
+    - name: Get code
+      uses: actions/checkout@v4
+    - name: Deploy PostgreSQL to Minikube
+      run: kubectl apply -f ${{ inputs.postgress_filename }}
+    - name: Wait for PostgreSQL to be ready
+      shell: bash
+      run: |
+        until kubectl get pods | grep postgresql | grep "1/1" | grep "Running"; do
+          echo "Waiting for PostgreSQL to start..."
+          sleep 5
+        done
+    - name: Execute SQL Statement
+      shell: bash
+      run: |
+        kubectl cp ${{ inputs.sql_filename }} $(kubectl get pods | grep postgresql | awk '{print $1}'):/${{ inputs.sql_filename }}
+        kubectl exec $(kubectl get pods | grep postgresql | awk '{print $1}') -- psql -U postgres -d ${{ inputs.db_name }} -f /${{ inputs.sql_filename }}
