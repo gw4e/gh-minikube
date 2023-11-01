@@ -13,6 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     environment: testing
     steps:
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
       - name: Start Minikube
         id: minikube
         run : minikube start

@@ -17,8 +17,7 @@ runs:
   steps:
     - name: Get code
       uses: actions/checkout@v4
-    - name: Deploy PostgreSQL to Minikube
-      shell: bash
+    - name: Deploy PostgreSQL
       run: kubectl apply -f ${{ inputs.postgress_filename }}
     - name: Wait for PostgreSQL to be ready
       shell: bash
