@@ -13,8 +13,6 @@ jobs:
     runs-on: ubuntu-latest
     environment: testing
     steps:
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
       - name: Start Minikube
         id: minikube
         run : minikube start
@@ -67,6 +65,8 @@ jobs:
         with:
           custom_hostname: mytestapp.com
           ingress_filename: ingress.yaml
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
       - name: Tests
         uses: ./.github/actions/run-mvn-tests
 
