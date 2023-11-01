@@ -65,8 +65,8 @@ jobs:
         with:
           custom_hostname: mytestapp.com
           ingress_filename: ingress.yaml
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
+      # - name: Setup tmate session
+      #  uses: mxschmitt/action-tmate@v3
       - name: Tests
         uses: ./.github/actions/run-mvn-tests
 
