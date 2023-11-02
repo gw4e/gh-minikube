@@ -13,8 +13,8 @@ import com.codeborne.selenide.SelenideElement;
 public class AppTest {
   @Test
   public void userCanAdd() {
-    open("http://mytestapp.com/");
-    ModalPage mpage = new HomePage().addItem();
+    HomePage hp = open("http://mytestapp.com/", HomePage.class);
+    ModalPage mpage = hp.addItem();
     mpage.isReady();
     mpage.feed();
 
